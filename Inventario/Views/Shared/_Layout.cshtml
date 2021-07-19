@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Inventario</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/LayoutPrincipal.css" />
+    <link rel="stylesheet" href="~/css/container.css" />
+    <link href="~/lib/font-awesome-5-css/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <center>
+                    <h2>Inventario</h2>
+                    <br />
+                    <br />
+                    <br />
+                </center>
+                <div id="Menudynamic">
+                    <ul class="nav nav-tabs">
+                        <li>
+                            <a class="nav-link" style="color:white;" href="~/Workplan/Index/">
+                                <i class="fas fa-list-alt"></i> Productos
+                            </a>
+                        </li>
+                        <br />
+                        <br />
+                        <br />
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="contenido">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    @RenderSection("Scripts", required: false)
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+</body>
+</html>

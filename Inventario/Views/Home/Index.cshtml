@@ -1,0 +1,181 @@
+﻿@model SID.Entities.Inventario.ComprasEntity
+
+@{
+    ViewData["Title"] = "Home";
+}
+<head>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    @{
+        if (ViewBag.TieneMensaje)
+        {
+            <script>
+                $(document).ready(function () {
+                    var parametro = $("#txtMensaje").val();
+                    swal(parametro.split('/')[0], parametro.split('/')[1], parametro.split('/')[2]);
+                });
+            </script>
+        }
+    }
+</head>
+<input type="hidden" id="txtMensaje" value="@ViewBag.Mensaje" />
+<div id="floatContainer" class="floatContainer">
+    <div id="headerButtons" class="col-xs-12 col-sm-12 col-xs-12 headerButtom row">
+        <div class="col-md-3 col-sm-6 col-xs-12 divCenter">
+            <button title="Este botón muestra un formulario para agregar una nueva sucursal" type="button" class="btn btn-info" id="btnNuevaSucursal" onclick="abrirModalNuevaSucursal()"><i class="fas fa-plus"></i> Agregar Sucursal</button>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12 divCenter">
+            <button title="Este botón muestra un formulario para agregar un nuevo producto" type="button" class="btn btn-info" id="btnNuevoProducto" onclick="abrirModalNuevoProducto()"><i class="fas fa-plus"></i> Agregar Producto</button>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12 divCenter">
+            <button title="Este botón muestra un formulario para eliminar productos" type="button" class="btn btn-info" id="btnEliminarProducto" onclick="abrirModalEliminarProducto()"><i class="fas fa-trash-alt"></i> Eliminar Producto</button>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12 divCenter">
+            <button title="Este botón muestra un formulario para agregar existencias" type="button" class="btn btn-info" id="btnAgregarExistencias" onclick="abrirModalAgregarExistencias()"><i class="fas fa-calculator"></i> Agregar Existencias</button>
+        </div>
+    </div>
+    <div id="formContainer">
+        <form asp-controller="Home" asp-action="InsertaCompra" method="post">
+            <div name="selectSucursal" class="row" style="margin-left:20px;">
+                <div class="col-md-2 col-sm-4 col-xs-12">
+                    <b><label>Sucursal: </label></b>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                    <select class="form-control" id="dllSucursal" name="Producto.Fk_IdSucursal" onchange="cargarProductosTablaPrincipal(this.value)"></select>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 divCenter">
+                    <button title="Seleccionar la sucursal y después este botón para comprar" type="button" class="btn btn-info" id="btnComprar" onclick="preparaCompra()"><i class="fas fa-shopping-cart"></i> Comprar</button>
+                </div>
+            </div>
+            <div class="datagrid">
+                <table id="table_Products" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:5%;">C. Barras</th>
+                            <th scope="col" style="width:75%;">Descripción</th>
+                            <th scope="col" style="width:5%;">Existencia</th>
+                            <th scope="col" style="width:5%;">P/U Mn</th>
+                            <th scope="col" style="width:10%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div name="montoTotal" class="row" style="margin-top:20px; margin-left:5px;">
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <b><label id="lvlEtiquetaMonto">Monto Total: </label></b><label id="lvlMonto"> 0 MN</label>
+                    <input type="hidden" name="Monto" id="txtMonto">
+                </div>
+            </div>
+            <div name="footerButtons" class="row" style="margin-bottom:20px;">
+                <div class="col-md-9 col-sm-8 col-xs-12">
+                    <button title="Cancelar Compra" type="button" class="btn btn-danger" id="btnCancelarCompra" onclick="cancelarCompra()" style="float:right;"><i class="fas fa-window-close"></i> Cancelar</button>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                    <button title="Realizar Compra" type="submit" class="btn btn-success" id="btnRealizarCompra" style="float:right;"><i class="fas fa-tags"></i> Pagar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+    @*MODALES*@
+<div id="dvAgregarNuevaSucursal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-full" role="document">
+        <div class="modal-content">
+            <div style="background-color: #252323; color:aliceblue;" class="modal-header">
+                <i class="fa fa-times fa-2x" aria-hidden="true" style="position:absolute; top: 10px; right: 10px; cursor:pointer; color:#FFFFFF" data-dismiss="modal" id="iclosed"></i>
+                <h5 class="modal-title" id="lblTituloAgregarSucursal"><span class="fas fa-plus"></span>  Agregar Nueva Sucursal</h5>
+            </div>
+            <div class="modal-body">
+                <div name="formularioAgregarNuevoProducto" class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <input type="text" name="sucursal" id="txtSucursal" class="form-control" autocomplete="off" placeholder="Excribe el nombre de la sucursal">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" onclick="agregarSucursal()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dvAgregarNuevoProducto" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-full" role="document">
+        <div class="modal-content">
+            <div style="background-color: #252323; color:aliceblue;" class="modal-header">
+                <i class="fa fa-times fa-2x" aria-hidden="true" style="position:absolute; top: 10px; right: 10px; cursor:pointer; color:#FFFFFF" data-dismiss="modal" id="iclosed"></i>
+                <h5 class="modal-title" id="lblTituloAgregarProducto"><span class="fas fa-plus"></span>  Agregar Nuevo Producto</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <input type="number" name="CodigBarras" id="txtCodigoBarras" class="form-control" autocomplete="off" placeholder="Excribe el Codigo de Barras">
+                </div>
+                <div class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <input type="text" name="producto" id="txtProducto" class="form-control" autocomplete="off" placeholder="Excribe el nombre del producto">
+                </div>
+                <div class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <input type="number" name="precio" id="txtPrecio" class="form-control" autocomplete="off" placeholder="Excribe el precio del Producto">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" onclick="agregarProducto()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dvAgregarExistencias" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-full" role="document">
+        <div class="modal-content">
+            <div style="background-color: #252323; color:aliceblue;" class="modal-header">
+                <i class="fa fa-times fa-2x" aria-hidden="true" style="position:absolute; top: 10px; right: 10px; cursor:pointer; color:#FFFFFF" data-dismiss="modal" id="iclosed"></i>
+                <h5 class="modal-title" id="lblTituloAgregarExistencia"><span class="fas fa-calculator"></span>  Agregar Existencias</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <b><label>Selecciona sucursal: </label></b>
+                    <select class="form-control" id="ddlSucursalExistencias" name="sucursalExistencias"></select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <input type="hidden" name="idProducto" id="txtIdProducto" class="form-control" autocomplete="off" placeholder="Excribe el nombre o código e barras del producto" onkeyup="onKeyUpBusquedaProducto(this.value)">
+                    <input type="text" name="nombreProducto" id="txtNombreProducto" class="form-control" autocomplete="off" placeholder="Excribe el nombre del producto" onkeyup="onKeyUpBusquedaProducto(this.value)">
+                </div>
+                <div class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <input type="number" name="cantProd" maxlength="5" id="txtCantProd" class="form-control" autocomplete="off" placeholder="Excribe una cantidad">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" onclick="agregarExistencia()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dvEliminaProd" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-full" role="document">
+        <div class="modal-content">
+            <div style="background-color: #252323; color:aliceblue;" class="modal-header">
+                <i class="fa fa-times fa-2x" aria-hidden="true" style="position:absolute; top: 10px; right: 10px; cursor:pointer; color:#FFFFFF" data-dismiss="modal" id="iclosed"></i>
+                <h5 class="modal-title" id="lblTituloEliminar"><span class="fas fa-trash-alt"></span>  Eliminar un Producto</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-12 col-sm-12 col-xs-12 row" style="margin-top:20px; margin-left:5px;">
+                    <input type="text" name="idProductoEliminar" id="txtIdProductoEliminar" class="form-control">
+                    <input type="text" name="nombreProductoEliminar" id="txtNombreProductoEliminar" class="form-control" autocomplete="off" placeholder="Escribe el nombre o código de barras del producto" onkeyup="onKeyUpBusquedaProductoEliminar(this.value)">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" onclick="eliminarProducto()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            cargarProductosTablaPrincipal(1)
+            obtenerListaSucursales()
+        });
+    </script>
+}
+
